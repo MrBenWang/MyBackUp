@@ -177,6 +177,28 @@ customize_system(){
 	sed -i 's/^%wheel.*/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 	# wheel组 su 不需要密码
 	sed -i 's/^#auth\s\+sufficient\s\+pam_wheel.so\s\+trust\s\+use_uid/auth sufficient pam_wheel.so trust use_uid/g' /etc/pam.d/su
+
+	# 别名设置
+	cat > /etc/profile.d/alias.sh <<-EOF
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\\$ '
+
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+
+alias ls='ls --color=auto'
+alias ll='ls -al'
+alias lm='ls -al | more'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+alias mkcd='function _mkcd(){ mkdir \$@ && cd \$@; }; _mkcd'
+alias cdl='function _cdl() { cd \$@ && pwd; ls -alF; }; _cdl'
+	EOF
 }
 
 reboot_os() {
