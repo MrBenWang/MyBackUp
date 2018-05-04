@@ -1,19 +1,23 @@
-#!/usr/bin/python3
-# -*- coding:utf8 -*-
-# create a new TXT file, the TXT's name is the same as the movie name.
+#!/usr/bin/env python3
+#coding: utf-8
 
-import codecs
+"""
+create a new TXT file, the TXT's name is the same as the movie name.
+"""
+
 import os
 
-path = 'G:/2-Relx/RMVB/movie'
-def getFileName(path):
-    f_list = os.listdir(path)
+def _get_filename(__path):
+    f_list = os.listdir(__path)
     for i in f_list:
-        #print(os.path.splitext(i)[1])
+        #print(os.__path.splitext(i)[1])
         mytmp = i.decode('gbk')
         if os.path.splitext(mytmp)[1] != '.txt':
-            open(path+"/"+mytmp[:mytmp.rfind(".")+1]+"txt","w").close()
-            print(path+"/"+ mytmp[:mytmp.rfind(".")+1]+"txt")
+            __tmp_path = "%s/%stxt" % (__path, mytmp[:mytmp.rfind(".")+1])
+            #open(__path + "/" + mytmp[:mytmp.rfind(".")+1]+"txt", "w").close()
+            open(__tmp_path, "w").close()
+            #print(__path+"/"+ mytmp[:mytmp.rfind(".")+1]+"txt")
+            print(__tmp_path)
 
 if __name__ == '__main__':
-    getFileName(path)
+    _get_filename('G:/2-Relx/RMVB/movie')
