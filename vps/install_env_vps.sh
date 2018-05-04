@@ -201,6 +201,12 @@ alias cdl='function _cdl() { cd \$@ && pwd; ls -alF; }; _cdl'
 	EOF
 }
 
+# 更新python 到 3.x
+update_python_to_3x(){
+	sudo apt-get install python3-pip
+	sudo pip-3.3 install pylint
+}
+
 reboot_os() {
 	# 清除 历史指令
 	history -c
