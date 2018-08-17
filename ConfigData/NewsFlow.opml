@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0">
+  <head>
+    <title>Newsflow</title>
+  </head>
+  <body>
+    <outline title="OutNews">
+      <outline htmlUrl="https://www.reddit.com/r/saraba1st/" text="泥潭被封，外野莫谈国事，这鸵鸟装不起啊，开个避难所好了 To English readers: This is a subreddit created as a fork of the famous Chinese forum, Saraba1st (or S1 in short)" title="第三新S1市" xmlUrl="https://www.reddit.com/r/saraba1st/.rss" />
+      <outline htmlUrl="http://www.ftchinese.com/" text="FT中文网每日新闻" title="FT中文网_英国《金融时报》(Financial Times)" xmlUrl="http://www.ftchinese.com/rss/feed" />
+      <outline htmlUrl="https://cn.nytimes.com" text="纽约时报中文网 国际纵览" title="纽约时报中文网 国际纵览" xmlUrl="https://cn.nytimes.com/rss/" />
+      <outline htmlUrl="http://www.bbcchinese.com" text="BBC Chinese - 主页" title="BBC Chinese - 主页" xmlUrl="http://feeds.bbci.co.uk/zhongwen/simp/rss.xml" />
+    </outline>
+    <outline title="New">
+      <outline htmlUrl="http://www.ithome.com/" text="IT之家 - 软媒旗下网站" title="IT之家" xmlUrl="https://www.ithome.com/rss/" />
+      <outline htmlUrl="http://www.infzm.com/" title="南方周末" xmlUrl="http://feedmaker.kindle4rss.com/feeds/hot.infzm.com.xml" />
+    </outline>
+    <outline title="Coder">
+      <outline htmlUrl="http://blog.jobbole.com" title="文章 – 伯乐在线" xmlUrl="http://blog.jobbole.com/feed/" />
+    </outline>
+    <outline title="Others">
+      <outline htmlUrl="http://www.jsgmmm.com/" text="Latest 20 threads of 四川省" title="金丝阁" xmlUrl="http://www.jsgmmm.com/forum.php?mod=rss&amp;fid=82&amp;auth=0" />
+    </outline>
+    <outline title="Economic">
+      <outline htmlUrl="https://wallstreetcn.com" title="华尔街见闻" xmlUrl="https://dedicated.wallstreetcn.com/rss.xml" />
+    </outline>
+  </body>
+</opml>
