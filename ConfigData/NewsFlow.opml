@@ -18,7 +18,7 @@
       <outline htmlUrl="http://blog.jobbole.com" title="文章 – 伯乐在线" xmlUrl="http://blog.jobbole.com/feed/" />
     </outline>
     <outline title="Others">
-      <outline htmlUrl="http://www.jsgmmm.com/" text="Latest 20 threads of 四川省" title="金丝阁" xmlUrl="http://www.jsgmmm.com/forum.php?mod=rss&amp;fid=82&amp;auth=0" />
+      <outline htmlUrl="http://www.jsgmmm.com/" text="Latest 20 threads" title="金丝阁" xmlUrl="http://www.jsgmmm.com/forum.php?mod=rss&amp;fid=82&amp;auth=0" />
     </outline>
     <outline title="Economic">
       <outline htmlUrl="https://wallstreetcn.com" title="华尔街见闻" xmlUrl="https://dedicated.wallstreetcn.com/rss.xml" />
