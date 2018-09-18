@@ -47,7 +47,7 @@
       "settings": {
         "email": "ss@v2ray.com",
         "method": "AEAD_CHACHA20_POLY1305",
-        "password": "zhenglongdeshadowsocks",
+        "password": "wodeshadowsocks",
         "level": 1,
         "ota": true,
         "network": "tcp"
