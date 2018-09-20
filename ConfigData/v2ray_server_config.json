@@ -7,7 +7,7 @@
   "inbound": {
     "port": 8080,
     "protocol": "vmess",
-    "tag": "maininvmess",
+    "tag": "kcpvmess",
     "streamSettings": {
       "network": "kcp"
     },
@@ -15,7 +15,7 @@
       "clients": [
         {
           "id": "f4acff3a-2288-43fb-86c2-88523cde1b6b",
-          "email": "vmess@v2ray.com",
+          "email": "kcpvmess@v2ray.com",
           "level": 1,
           "alterId": 64
         }
@@ -38,7 +38,7 @@
     {
       "protocol": "shadowsocks",
       "port": "8081",
-      "tag": "subinss",
+      "tag": "subss",
       "allocate": {
         "strategy": "always",
         "refresh": 5,
@@ -51,6 +51,36 @@
         "level": 1,
         "ota": true,
         "network": "tcp"
+      },
+      "sniffing": {
+        "enabled": false,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    },
+    {
+      "port": 8090,
+      "protocol": "vmess",
+      "tag": "tcpvmess",
+      "streamSettings": {
+        "network": "tcp"
+      },
+      "settings": {
+        "clients": [
+          {
+            "id": "bcc48027-3f4d-41d0-a179-64b2d4000b83",
+            "email": "tcpvmess@v2ray.com",
+            "level": 1,
+            "alterId": 64
+          }
+        ],
+        "default": {
+          "level": 0,
+          "alterId": 64
+        },
+        "disableInsecureEncryption": true
       },
       "sniffing": {
         "enabled": false,
