@@ -46,14 +46,11 @@
       },
       "settings": {
         "email": "ss@v2ray.com",
-        "method": "AEAD_CHACHA20_POLY1305",
+        "method": "chacha20-ietf-poly1305",
         "password": "wodeshadowsocks",
         "level": 1,
         "ota": true,
         "network": "tcp"
-      },
-      "streamSettings": {
-        "network": "kcp"
       },
       "sniffing": {
         "enabled": false,
