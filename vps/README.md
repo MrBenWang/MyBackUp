@@ -1,22 +1,6 @@
 # vps
 
+VPS CentOS 7
 
-my wrote shells，for downloading in vps, and backup 
-
-## Install 
-
-
-##### On Client ,Exec Command:
-
-```sh
-wget https://github.com/MrBenWang/MyWroteScripts/blob/master/vps/public_key_upload_vps.sh -P ~/
-chmod a+x public_key_upload_vps.sh
-~/public_key_upload_vps.sh [Server IP]
-```
-##### On Server ,Exec Command: 
-
-```sh
-wget https://github.com/MrBenWang/MyWroteScripts/blob/master/vps/install_env_vps.sh -P ~/
-chmod a+x install_env_vps.sh
-~/install_env_vps.sh [New User Passwd]
-```
+- **0001_public_key_upload_vps.sh** 生成一个密钥，并且上传到vps
+- **0002_install_env_vps.sh** 初始化配置 vps 的脚本

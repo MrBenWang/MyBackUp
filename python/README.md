@@ -2,5 +2,7 @@
 
 python version 3.x 
 
-- **00_for_something** 为了某些具体的事情，写的脚本
-- **01_tools** 可以提取成为，通用工具的
+- **001_dr_wikipage.py**  导出wiki内容，为pdf，方便离线查看
+- **002_create_file_bynames** 使用名称的列表，创建新文件
+- **003_resize_images.py** 缩小图片
+- **004_get_chrome_local_user_pwd.py** 从本机电脑上，获取保存在chrome上的密码

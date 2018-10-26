@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 # 在客户端生成 私钥，然后上传到服务器，配置好ssh
 
+
+"""
+On Client ,Exec Command:
+
+```sh
+wget https://github.com/MrBenWang/MyWroteScripts/blob/master/vps/public_key_upload_vps.sh -P ~/
+chmod a+x public_key_upload_vps.sh
+~/public_key_upload_vps.sh [Server IP]
+```
+"""
+
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
