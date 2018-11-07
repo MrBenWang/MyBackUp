@@ -7,3 +7,4 @@ python version 3.x
 - **003_resize_images.py**  缩小图片
 - **004_get_chrome_local_user_pwd.py**  从本机电脑上，获取保存在chrome上的密码
 - **005_change_pwd_regularly.py**  期望通过脚本，修改定期修改电脑上，所有相关密码。
+- **006-show_file_encoding.py**  显示目录下，所有文件的编码格式
