@@ -9,7 +9,7 @@ updategit       https://github.com/xianmin/hugo-theme-jane.git (push)
 ```
 
 2. git remote add updategit git@github.com:xxx/xxx.git  // 添加远程仓库 链接，名为 updategit
-3. git fetch upstream  // 从原仓库更新同步代码
+3. git fetch updategit  // 从原仓库更新同步代码
 
 ``` git
 $ git fetch updategit
