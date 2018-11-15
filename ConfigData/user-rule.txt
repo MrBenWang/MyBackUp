@@ -1,7 +1,0 @@
-! Put user rules line by line in this file.
-! See https://adblockplus.org/en/filter-cheatsheet
-||reddit.com
-||redd.it
-||redditmedia.com
-||imgur.com
-||xiao776.com
