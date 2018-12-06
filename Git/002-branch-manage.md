@@ -6,6 +6,7 @@
 2. git branch -a    # 查看远程和本地所有分支
 3. git branch       # 查看本地分支, 带* 的是当前分支
 4. git branch -vv   # 查看本地分支和远程分支的映射关系
+5. git pull --rebase origin # 更新 origin 下的所有分支
 
 ## 操作分支
 
@@ -13,7 +14,10 @@
 2. git checkout iss53   # 切换到分支 iss53
 3. git checkout -b iss53                # 等于 1 和 2 的操作
 4. git branch -d iss53  # 删除分支 iss53
-5. git branch --set-upstream-to origin/远程分支名  本地分支名   # 本地分支关联到远程分支
+5. git push origin --delete remote_iss53    #删除远程分支
+6. git fetch -p origin  # 把本地缓存的，无效远程分支。删除掉
+7. git branch --set-upstream-to origin/远程分支名  本地分支名   # 本地分支关联到远程分支
+8. git push origin test:test    # 提交本地 test 分支作为远程的 test 分支
 
 ## 合并分支
 
