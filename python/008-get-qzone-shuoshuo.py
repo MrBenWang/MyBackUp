@@ -2,51 +2,95 @@
 #coding: utf-8
 
 import requests
-
+import time
+import re
+import os
 """
 https://blog.csdn.net/qq_41861526/article/details/80194266
 
 """
 
-cookie_path=r"C:\Users\asus\Desktop\cookies.txt"
-session =requests.session()
-user=input('输入登录的qq号:')
+cookie_path = os.path.dirname(os.path.realpath(__file__)) + "\\cookies.txt"
+# 只能用账号 密码登录。不能扫码
+user = input('输入QQ名:')
+pwd = input('输入密码:')
+
+headers = {
+    'authority':
+    'user.qzone.qq.com',
+    'method':
+    'GET',
+    'scheme':
+    'https',
+    'accept':
+    'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'accept-encoding':
+    'gzip, deflate, br',
+    'accept-language':
+    'zh-CN,zh;q=0.9',
+    'cache-control':
+    'max-age=1',
+    'user-agent':
+    'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+}
+
 
 def login():
-    from selenium import webdriver # 调用这个模块
-    driver = webdriver.Firefox()
-    driver.get('https://user.qzone.qq.com/') # 获取qq登录界面
-    global session # 这里的话，是将session变成全局变量，这样子就能保证整个程序里面sesssion的cookie都是一样
-    time.sleep(30) # 这里给30秒，是给时间给你扫码，或者输入时间进行登录，因为selenium是不知道你什么时候输入密码完成的，所以必须要自己去管
-    with open(cookie_path, 'w+') as f: # 这里是将得到的cookie进行保存，这样就不用每次启动程序都要登录
-        for cookie in driver.get_cookies():
-            print(cookie)
-            f.write(cookie['name']+'=='+cookie['value']+'\n')
-    f.close()
+    from selenium import webdriver  # 调用这个模块
+    driver = webdriver.Chrome(executable_path="D:\\Wzl\\chromedriver.exe")
+    driver.get("https://user.qzone.qq.com/")  # 获取qq登录界面
+    driver.switch_to_frame('login_frame')
+    driver.find_element_by_id('switcher_plogin').click()
+    driver.find_element_by_id('u').send_keys(user)
+    driver.find_element_by_id('p').send_keys(pwd)
+    driver.find_element_by_id('login_button').click()
+    time.sleep(4)
 
-def cookielogin():
-    global session # 设置全局变量
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0',
-               'Referer': 'https://qzone.qq.com/',
-               'Host': 'user.qzone.qq.com'}
-    with open(cookie_path, 'r') as f: # 从文本中获取到cookies并且变成可使用的cookies的格式
-        ans = f.readlines()
- 
-    for an in ans:
-        an = an.replace('\n', '')
-        a = an.split('==')
-        cookies[a[0]] = a[1]
-    cookies['_qz_referrer'] = 'i.qq.com'
-    requests.utils.add_dict_to_cookiejar(session.cookies,cookies) # 这里就是将cookie和session绑定在一起
-    r=session.get('https://user.qzone.qq.com/%s/infocenter'%(user),headers=headers,verify=False)
+    # 生产 qzonetoken
+    html = driver.page_source
+    xpat = r'window\.g_qzonetoken = \(function\(\)\{ try{return \"(.*)";'
+    qzonetoken = re.compile(xpat).findall(html)[0]
+    # 获取 cookie
+    cookies = driver.get_cookies()
+    realCookie = {}
+    for elem in cookies:
+        realCookie[elem['name']] = elem['value']
+    #获得 g_tk
+    g_tk = get_g_tk(realCookie)
 
-    if not re.findall('QQ空间-分享生活，留住感动',r.text): # 判断是否有这个，来判断是否登录成功
-        return True
-    else:
-        return False
-
+    # session 缓存
+    session = requests.session()
+    c = requests.utils.cookiejar_from_dict(
+        realCookie, cookiejar=None, overwrite=True)
+    session.headers = headers
+    session.cookies.update(c)
+    driver.close()
+    get_shuoshuo_message(session, g_tk, qzonetoken)
 
 
-if __name__=="__main__":
-    if not cookielogin():
-        login()
+# 实际的获取过程
+def get_shuoshuo_message(session, tmp_g_tk, tmp_qzonetoken):
+    url_json = "https://h5.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin={user}&inCharset=utf-8&outCharset=utf-8&hostUin={user}&notice=0&sort=0&pos={pos}&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk={g_tk}&qzonetoken={qzonetoken}"
+    for _index in range(20):  # qq说说的分页数，每页20个
+        tmp_url = url_json.format(
+            user=user,
+            pos=_index * 20,
+            g_tk=tmp_g_tk,
+            qzonetoken=tmp_qzonetoken)
+        response = session.get(tmp_url)
+        f_name = "D:/q_shuoshuo/{:0>2d}.json".format(_index)
+        text = response.text
+        with open(f_name, 'w+', encoding="utf-8") as __f:
+            __f.write(text[10:-2])  # 去掉 jsonp： _Callback( jsonstring );
+
+
+# 这个函数用来解决腾讯g_tk加密算法的函数
+def get_g_tk(cookies):
+    hashes = 5381
+    for letter in cookies['p_skey']:
+        hashes += (hashes << 5) + ord(letter)  # ord()是用来返回字符的ascii码
+    return hashes & 0x7fffffff
+
+
+if __name__ == "__main__":
+    login()
