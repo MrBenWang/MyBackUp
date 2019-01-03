@@ -17,6 +17,7 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 # 只能用账号 密码登录。不能扫码
 user = input('输入QQ名:')
 pwd = input('输入密码:')
+total_page = 20  # 去看自己的qq说说 总的分页数
 
 headers = {
     'User-Agent':
@@ -64,7 +65,7 @@ def login():
 # 实际的获取过程
 def get_shuoshuo_message(session, tmp_g_tk, tmp_qzonetoken):
     url_json = "https://h5.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin={user}&inCharset=utf-8&outCharset=utf-8&hostUin={user}&notice=0&sort=0&pos={pos}&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk={g_tk}&qzonetoken={qzonetoken}"
-    for _index in range(20):  # qq说说的分页数，每页20个
+    for _index in range(total_page):  # qq说说的分页数，每页20个
         tmp_url = url_json.format(
             user=user,
             pos=_index * 20,
