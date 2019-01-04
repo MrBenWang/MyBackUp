@@ -349,10 +349,10 @@ def analyse_touxiang_data():
     # 导入wordcount，用于制作词云图
     from wordcloud import WordCloud, STOPWORDS
     # 向腾讯优图平台申请的开发密钥，此处需要替换为自己的密钥
-    appid = "10163857"
-    secret_id = "AKIDQhlaAcArd8OPAg9IG3kFPQPAuTnurU0W"
-    secret_key = "jGbjdhbHsMe6MNAjBA3oVyDDyew4xb5L"
-    userid = "258927389" # 你的qq号
+    appid = "----"
+    secret_id = "----"
+    secret_key = "----"
+    userid = "----" # 你的qq号
 
     end_point = TencentYoutuyun.conf.API_YOUTU_END_POINT  # 优图开放平台
     youtu = TencentYoutuyun.YouTu(appid, secret_id, secret_key, userid, end_point)
