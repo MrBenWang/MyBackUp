@@ -203,7 +203,7 @@ def show_fen_ci_qianmin():
     stopwords.add('emoji1f633')
 
     # 导入背景图
-    bg_image = plt.imread(current_dir+'/010-wechat-bg.jpg')
+    bg_image = plt.imread(current_dir+'/20190104-wechat-bg.jpg')
 
     # 设置词云参数，参数分别表示：画布宽高、背景颜色、背景图形状、字体、屏蔽词、最大词的字体大小
     wc = WordCloud(width=1024, height=768, background_color='white', mask=bg_image, font_path='STKAITI.TTF',
@@ -238,7 +238,7 @@ def show_fen_ci_beizhu():
     words = ' '.join(split)  # 以空格进行拼接
 
     # 导入背景图
-    bg_image = plt.imread(current_dir+'/010-wechat-bg.jpg')
+    bg_image = plt.imread(current_dir+'/20190104-wechat-bg.jpg')
 
     # 设置词云参数，参数分别表示：画布宽高、背景颜色、背景图形状、字体、屏蔽词、最大词的字体大小
     wc = WordCloud(width=1024, height=768, background_color='white', mask=bg_image, font_path='STKAITI.TTF',
@@ -406,7 +406,7 @@ def analyse_touxiang_data():
     words = ' '.join(split)  # 以空格进行拼接
 
     # 导入背景图
-    bg_image = plt.imread(current_dir+'/010-wechat-bg.jpg')
+    bg_image = plt.imread(current_dir+'/20190104-wechat-bg.jpg')
 
     # 设置词云参数，参数分别表示：画布宽高、背景颜色、背景图形状、字体、屏蔽词、最大词的字体大小
     wc = WordCloud(width=1024, height=768, background_color='white', mask=bg_image, font_path='STKAITI.TTF',
