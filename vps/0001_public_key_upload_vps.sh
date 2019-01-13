@@ -27,3 +27,17 @@ ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ''
 
 # 上传公钥给服务器
 ssh-copy-id root@$1 && echo -e "upload id_rsa ${green}success${plain} " || echo -e "upload public_key ${red}failure${plain}"
+
+# ssh-copy-id -p 22 -i ~/.ssh/id_rsa.pub root@123.123.123.123
+# scp .ssh/id_rsa.pub username@hostname:~/.ssh/
+# vim scp://root@example.com//home/centos/docker-compose.yml
+```
+Host vps
+    HostName 123.123.123.123
+    Port 22
+    User username
+    IndentityFile ~/.ssh/id_rsa
+    IdentitiesOnly yes
+    LocalForward 5433 localhost:5432   #端口转发
+    ProxyCommand ssh gateway netcat -q 600 %h %p      # 代理命令
+```
