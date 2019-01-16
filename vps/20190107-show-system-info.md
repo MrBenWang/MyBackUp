@@ -16,6 +16,7 @@ uname -a        #版本
 hostname        #计算机名
 env             #环境变量
 uptime          #当前时间，运行了多久，多少个用户，平均系统负载时间
+cat /etc/redhat-release #发行版本 CentOS Linux release 7.6.1810 (Core)
 cat /proc/loadavg       #直接查看平均负载情况。【0.00 0.01 0.05 4/524 7152】 除了前3个数字表示平均进程数量外，后面的1个分数，分母表示系统进程总数，分子表示正在运行的进程数；最后一个数字表示最近运行的进程ID
 
 w       #活动用户

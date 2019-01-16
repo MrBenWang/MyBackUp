@@ -103,7 +103,7 @@ customize_system(){
 
 	# 别名设置
 	cat > /etc/profile.d/alias.sh <<-EOF
-PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\\$ '
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
 
 alias cp='cp -i'
 alias mv='mv -i'
