@@ -11,3 +11,8 @@ RoomRepository.Entities.Where(
 
 https://bugs.mysql.com/bug.php?id=77735
 解决办法：String.IsNullOrEmpty 方法提取出来，或者不允许为NULL。
+
+https://bugs.mysql.com/bug.php?id=74918
+Linq-to-Mysql 的一个bug： a workaround is to use .Substring(0) which forces Entity not to use LIKE (might affect performance).
+
+DateTime.UtcNow; // MySql的EntityFramework映射中的错误。
