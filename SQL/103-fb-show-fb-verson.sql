@@ -1,1 +1,0 @@
-select rdb$get_context('SYSTEM','ENGINE_VERSION') as "version" from RDB$DATABASE;
