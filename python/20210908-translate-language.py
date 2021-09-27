@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
+import requests
 from openpyxl import load_workbook
 from googletrans import Translator
 import os
@@ -17,6 +18,45 @@ def do_translate(text_english, target_lang):
     str_tran = translator.translate(text_english, src='en', dest=target_lang.strip()).text
     print(str_tran)
     return str_tran
+
+
+def do_translate_chrome_ex(text_english, target_lang):
+    url = "https://clients5.google.com/translate_a/t"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36'
+    }
+    proxies = {'http': 'socks5://127.0.0.1:10808', 'https': 'socks5://127.0.0.1:10808'}
+    params = {
+        'client': 'dict-chrome-ex',
+        'sl': 'en',
+        'tl': target_lang,
+        'q': text_english
+    }
+
+    request_result = requests.get(url, params=params, proxies=proxies, headers=headers).json()
+    ret_text = request_result["sentences"][0]["trans"]
+    print(ret_text)
+    return ret_text
+
+
+def do_translate_vscode(text_english, target_lang):
+    url = "https://translate.googleapis.com/translate_a/single"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36'
+    }
+    proxies = {'http': 'socks5://127.0.0.1:10808', 'https': 'socks5://127.0.0.1:10808'}
+    params = {
+        'client': 'gtx',
+        'dt': 't',
+        'sl': 'en',
+        'tl': target_lang,
+        'q': text_english
+    }
+
+    request_result = requests.get(url, params=params, proxies=proxies, headers=headers).json()
+    ret_text = request_result[0][0][0]
+    print(ret_text)
+    return ret_text
 
 
 def read_excel():
@@ -41,5 +81,7 @@ def read_excel():
 
 
 if __name__ == "__main__":
-    #print(translator.translate('안녕하세요.', src="ko", dest='zh-cn'))
+    # do_translate_chrome_ex("Reselect", "it")
+    # do_translate_vscode("Reselect", "it")
+    # print(translator.translate('Reselect', src="en", dest='it'))
     read_excel()
