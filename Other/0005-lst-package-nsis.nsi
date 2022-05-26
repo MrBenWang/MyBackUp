@@ -1,27 +1,30 @@
-# 官网: https://nsis.sourceforge.io/
-# 需要用到的Unicode插件: nsProcess.dll、SimpleSC.dll
+# 官网: https://nsis.sourceforge.io/  用3.08版本，脚本文件格式必须为 utf-8 with BOM
+# 使用 Modern 风格界面 那种下一
 
 !include "MUI2.nsh"       # 使用 Modern 风格界面，那种下一步下一步界面。
 !include "LogicLib.nsh"   # 逻辑操作符头文件。就是 {If} 那些。
 !include "WordFunc.nsh"
 
+#!define PROD_OR_TEST "prod"   # 给生产环境打包，还是测试环境打包
+!define PROD_OR_TEST "test"   # 给生产环境打包，还是测试环境打包
+
 #------------------------------------
 # 安装包的基本属性设置。
-!define PRODUCT_NAME "MyName Smart Tool"
-!define PRODUCT_VERSION "3.6.0.5"
-!define PRODUCT_PUBLISHER "MyName"
-!define PRODUCT_WEB_SITE "https://www.MyName.com"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\MyNameSmartTool.exe"
+!define PRODUCT_NAME "Myname Smart Tool"
+!define PRODUCT_VERSION "3.6.0.3"
+!define PRODUCT_PUBLISHER "Myname"
+!define PRODUCT_WEB_SITE "https://www.Myname.com"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\MynameSmartTool.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM" # HKLM or HKEY_LOCAL_MACHINE
-!define PRODUCT_MAIN_EXE "MyNameSmartTool.exe"
-!define PRODUCT_MAIN_NT_SERVICES_NAME "MyNameSmartToolClientNTService"
+!define PRODUCT_MAIN_EXE "MynameSmartTool.exe"
+!define PRODUCT_MAIN_NT_SERVICES_NAME "MynameSmartToolClientNTService"
 #---------------------------------
 
-# Unicode true  # 设置为 Unicode 模式，这样界面才可以显示全部的语言。
+#Unicode true  # 设置为 Unicode 模式，这样界面才可以显示全部的语言。
 Name "${PRODUCT_NAME}" # 设定软件的名字。
-OutFile "MyName_Smart_Tool_v${PRODUCT_VERSION}_setup.exe" # 设定编译输出的文件名。
-InstallDir "$PROGRAMFILES\MyName\MyNameSmartTool" # 设定默认的安装路径。
+OutFile "Myname_Smart_Tool_v${PRODUCT_VERSION}_${PROD_OR_TEST}_setup.exe" # 设定编译输出的文件名。
+InstallDir "$PROGRAMFILES\Myname\MynameSmartTool" # 设定默认的安装路径。
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 
 ShowInstDetails show  # 默认显示安装细节，安装过程中输出的文字信息。
@@ -46,16 +49,16 @@ SetDateSave on # 保存文件日期。
 !define MUI_ABORTWARNING  # 中途退出安装时弹出提示。
 !define MUI_LANGDLL_ALLLANGUAGES  # 强制显示所有支持的语言。
 
-BrandingText "Provided by MyName"  # 设置分割线上的文字。
+BrandingText "Provided by Myname"  # 设置分割线上的文字。
 
 #------------------------------------
 # 安装包要显示的界面，需要注意的是，界面是按照插入顺序来显示的。
 !insertmacro MUI_PAGE_WELCOME # 首先插入的是欢迎界面。
 !define MUI_LICENSEPAGE_RADIOBUTTONS
-!insertmacro MUI_PAGE_LICENSE ".\05-InstallationProjectResources\license.rtf"  # 插入协议确认界面。
+!insertmacro MUI_PAGE_LICENSE ".\05-InstallationProjectResources\license_new.rtf"  # 插入协议确认界面。
 !insertmacro MUI_PAGE_DIRECTORY # 插入选择安装路径界面。
 !insertmacro MUI_PAGE_INSTFILES # 插入安装过程界面。
-!define MUI_FINISHPAGE_RUN "$INSTDIR\MyNameSmartTool.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\MynameSmartTool.exe"
 !define MUI_FINISHPAGE_RUN_CHECKED
 !insertmacro MUI_PAGE_FINISH  # 插入完成界面。
 
@@ -99,7 +102,7 @@ LangString LAUNCH_TEXT ${LANG_ENGLISH} "Launch the program"
         DetailPrint "Stopping ${PRODUCT_MAIN_NT_SERVICES_NAME} service..."
         SimpleSC::StopService "${PRODUCT_MAIN_NT_SERVICES_NAME}" 1 30
         Pop $0 ; returns an errorcode (<>0) otherwise success (0)
-        StrCmp $0 0 do_continue +1
+        StrCmp $0 0 do_remove +1
           Push $0
           SimpleSC::GetErrorMessage
           Pop $0
@@ -148,18 +151,9 @@ Function CheckExistsOrUpgrade
       goto continue_install
     continue_install:
       ExecWait '$R0 _?=$INSTDIR'
+      Delete "$R0"
   ${EndIf}
 
-FunctionEnd
-
-Function .onInit
-  !insertmacro MUI_LANGDLL_DISPLAY
-  Debug::Watcher
-
-  Call CheckSingleInstallation
-  Call RunningCheck
-  Call UninstallMSI
-  Call CheckExistsOrUpgrade
 FunctionEnd
 
 Function UninstallMSI
@@ -180,12 +174,21 @@ Function UninstallMSI
     pop $R1
 FunctionEnd
 
+Function .onInit
+  !insertmacro MUI_LANGDLL_DISPLAY
+  #Debug::Watcher
+
+  Call CheckSingleInstallation
+  Call RunningCheck
+  Call CheckExistsOrUpgrade
+FunctionEnd
+
 Section -MainSection
 
   Call RomveNTServices
 
   SetOverwrite ifnewer
-  CreateDirectory "$SMPROGRAMS\MyNameSmartTool"
+  CreateDirectory "$SMPROGRAMS\MynameSmartTool"
 
   SetOutPath "$INSTDIR\7za"
   File "..\3rdPartyLibraries\7za\7z.dll"
@@ -202,7 +205,7 @@ Section -MainSection
   SetOutPath "$INSTDIR\drivers\QUALCOMM"
   File "..\Installation\03-ConfigurationFileTemplates\drivers\QUALCOMM\Qualcomm.win.1.1_installer_10061.1.exe"
   SetOutPath "$INSTDIR\drivers\SmartClock"
-  File "..\Installation\03-ConfigurationFileTemplates\drivers\SmartClock\MyNameUsbDriver_autorun_1.1.33_user.exe.zip"
+  File "..\Installation\03-ConfigurationFileTemplates\drivers\SmartClock\MynameUsbDriver_autorun_1.1.33_user.exe.zip"
 
   SetOutPath "$INSTDIR\HWDetection"
   File "..\Installation\03-ConfigurationFileTemplates\HWDetection\MobileAssistant.apk"
@@ -238,8 +241,9 @@ Section -MainSection
   File "..\3rdPartyLibraries\Firebird-2.5.4.26856-0_Win32_embed\firebird.conf"
   File "..\3rdPartyLibraries\Firebird-2.5.4.26856-0_Win32_embed\fbembed.dll"
   File "..\3rdPartyLibraries\Firebird-2.5.4.26856-0_Win32_embed\ib_util.dll"
+  File "..\3rdPartyLibraries\Interop.SHDocVw.dll"
   File "..\Installation\05-InstallationProjectResources\Language.xlsx"
-  File "..\Installation\00-Documents\00-Help\Tools\MyName_Smart_Tool_User_guide.pdf"
+  File "..\Installation\00-Documents\00-Help\Tools\Myname_Smart_Tool_User_guide.pdf"
   File "..\DataAccessor\LNO_CLIENT.FDB"
 
   File "..\Bin\zxing.dll"
@@ -264,13 +268,12 @@ Section -MainSection
   File "..\Bin\LSTClientFramework.dll"
   File "..\Bin\log4net.dll"
   File "..\Bin\LibUsbDotNet.dll"
-  File "..\Bin\MyNameSmartToolWebApiProxy.dll"
-  File "..\Bin\MyNameSmartToolNTServiceProxy.dll"
-  File "..\Bin\MyName.Themes.dll"
+  File "..\Bin\MynameSmartToolWebApiProxy.dll"
+  File "..\Bin\MynameSmartToolNTServiceProxy.dll"
+  File "..\Bin\Myname.Themes.dll"
   File "..\Bin\KnowledgeBasePlugin.dll"
   File "..\Bin\KillSwitchBase.dll"
   File "..\Bin\ISmart.dll"
-  File "..\Bin\Interop.SHDocVw.dll"
   File "..\Bin\ICSharpCode.SharpZipLib.dll"
   File "..\Bin\HwDetectionPlugin.dll"
   File "..\Bin\FirebirdSql.Data.FirebirdClient.dll"
@@ -286,14 +289,18 @@ Section -MainSection
   File "..\Bin\Configurations.dll"
   File "..\Bin\BasicDefinition.dll"
   File "..\Bin\AdaptorManger.dll"
-  File "..\Bin\MyNameSmartToolSrv.exe"
-  File "..\Bin\MyNameSmartTool.exe"
-  File "..\Bin\MyNameSmartToolSrv.exe.config"
-  File "..\Bin\MyNameSmartTool.exe.config"
+  File "..\Bin\MynameSmartToolSrv.exe"
+  File "..\Bin\MynameSmartTool.exe"
+  File "..\Bin\MynameSmartToolSrv.exe.config"
+  File "..\Bin\MynameSmartTool.exe.config"
+
+  StrCmp ${PROD_OR_TEST} "prod" +1 do_continue
+    File "..\Bin\uninst.exe"
+  do_continue:
 
   # service_type:16-在自己的进程中运行的服务  start_type:2-服务自动启动
   DetailPrint "Installing ${PRODUCT_MAIN_NT_SERVICES_NAME} Client service..."
-  SimpleSC::InstallService "${PRODUCT_MAIN_NT_SERVICES_NAME}" "MyNameSmartTool Client NTService" "16" "2" "$INSTDIR\MyNameSmartToolSrv.exe" "" "" "" 
+  SimpleSC::InstallService "${PRODUCT_MAIN_NT_SERVICES_NAME}" "MynameSmartTool Client NTService" "16" "2" "$INSTDIR\MynameSmartToolSrv.exe" "" "" "" 
   SimpleSC::SetServiceDescription "${PRODUCT_MAIN_NT_SERVICES_NAME}" "Lst windows services"
   DetailPrint "starting ${PRODUCT_MAIN_NT_SERVICES_NAME} Client service..."
   SimpleSC::StartService "${PRODUCT_MAIN_NT_SERVICES_NAME}" "" 30
@@ -310,17 +317,20 @@ FunctionEnd
 
 # 区段名为空、遗漏或者以一个 "-" 开头, 那么它将是一个隐藏的区段, 用户也不能选择禁止它.
 Section -AdditionalIcons
-  CreateShortCut "$DESKTOP\MyName Smart Tool.lnk" "$INSTDIR\MyNameSmartTool.exe"
-  CreateShortCut "$SMPROGRAMS\MyNameSmartTool\MyName Smart Tool.lnk" "$INSTDIR\MyNameSmartTool.exe"
-  CreateShortCut "$SMPROGRAMS\MyNameSmartTool\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  CreateShortCut "$DESKTOP\Myname Smart Tool.lnk" "$INSTDIR\MynameSmartTool.exe"
+  CreateShortCut "$SMPROGRAMS\MynameSmartTool\Myname Smart Tool.lnk" "$INSTDIR\MynameSmartTool.exe"
+  CreateShortCut "$SMPROGRAMS\MynameSmartTool\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
 
 Section -Post
-  WriteUninstaller "$INSTDIR\uninst.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\MyNameSmartTool.exe"  # HKLM or HKEY_LOCAL_MACHINE
+  StrCmp ${PROD_OR_TEST} "test" +1 do_continue
+    WriteUninstaller "$INSTDIR\uninst.exe"
+  do_continue:
+
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\MynameSmartTool.exe"  # HKLM or HKEY_LOCAL_MACHINE
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\MyNameSmartTool.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\MynameSmartTool.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
@@ -342,10 +352,10 @@ Section Uninstall
 
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
-  Delete "$INSTDIR\MyNameSmartTool.exe.config"
-  Delete "$INSTDIR\MyNameSmartToolSrv.exe.config"
-  Delete "$INSTDIR\MyNameSmartTool.exe"
-  Delete "$INSTDIR\MyNameSmartToolSrv.exe"
+  Delete "$INSTDIR\MynameSmartTool.exe.config"
+  Delete "$INSTDIR\MynameSmartToolSrv.exe.config"
+  Delete "$INSTDIR\MynameSmartTool.exe"
+  Delete "$INSTDIR\MynameSmartToolSrv.exe"
   Delete "$INSTDIR\AdaptorManger.dll"
   Delete "$INSTDIR\BasicDefinition.dll"
   Delete "$INSTDIR\Configurations.dll"
@@ -365,9 +375,9 @@ Section Uninstall
   Delete "$INSTDIR\Interop.SHDocVw.dll"
   Delete "$INSTDIR\KillSwitchBase.dll"
   Delete "$INSTDIR\KnowledgeBasePlugin.dll"
-  Delete "$INSTDIR\MyName.Themes.dll"
-  Delete "$INSTDIR\MyNameSmartToolNTServiceProxy.dll"
-  Delete "$INSTDIR\MyNameSmartToolWebApiProxy.dll"
+  Delete "$INSTDIR\Myname.Themes.dll"
+  Delete "$INSTDIR\MynameSmartToolNTServiceProxy.dll"
+  Delete "$INSTDIR\MynameSmartToolWebApiProxy.dll"
   Delete "$INSTDIR\LibUsbDotNet.dll"
   Delete "$INSTDIR\log4net.dll"
   Delete "$INSTDIR\LSTClientFramework.dll"
@@ -390,7 +400,7 @@ Section Uninstall
   Delete "$INSTDIR\Utility.dll"
   Delete "$INSTDIR\WebApiClient.JIT.dll"
   Delete "$INSTDIR\zxing.dll"
-  Delete "$INSTDIR\MyName_Smart_Tool_User_guide.pdf"
+  Delete "$INSTDIR\Myname_Smart_Tool_User_guide.pdf"
   Delete "$INSTDIR\Language.xlsx"
   Delete "$INSTDIR\fbembed.dll"
   Delete "$INSTDIR\firebird.conf"
@@ -414,7 +424,7 @@ Section Uninstall
   Delete "$INSTDIR\LocalConfig\LocalFuncSetting.xml"
   Delete "$INSTDIR\LocalConfig\LocalAppSetting.xml"
   Delete "$INSTDIR\LocalConfig\Config.xml"
-  Delete "$INSTDIR\drivers\SmartClock\MyNameUsbDriver_autorun_1.1.33_user.exe.zip"
+  Delete "$INSTDIR\drivers\SmartClock\MynameUsbDriver_autorun_1.1.33_user.exe.zip"
   Delete "$INSTDIR\drivers\QUALCOMM\Qualcomm.win.1.1_installer_10061.1.exe"
   Delete "$INSTDIR\drivers\MTK\x86\usb2ser.sys"
   Delete "$INSTDIR\drivers\MTK\x64\usb2ser.sys"
@@ -428,11 +438,11 @@ Section Uninstall
   Delete "$INSTDIR\intl\fbintl.conf"
   Delete "$INSTDIR\intl\fbintl.dll"
 
-  Delete "$DESKTOP\MyName Smart Tool.lnk"
-  Delete "$SMPROGRAMS\MyNameSmartTool\MyName Smart Tool.lnk"
-  Delete "$SMPROGRAMS\MyNameSmartTool\Uninstall.lnk"
+  Delete "$DESKTOP\Myname Smart Tool.lnk"
+  Delete "$SMPROGRAMS\MynameSmartTool\Myname Smart Tool.lnk"
+  Delete "$SMPROGRAMS\MynameSmartTool\Uninstall.lnk"
 
-  RMDir "$SMPROGRAMS\MyNameSmartTool"
+  RMDir "$SMPROGRAMS\MynameSmartTool"
   RMDir "$INSTDIR\Resources"
   RMDir "$INSTDIR\intl"
   RMDir "$INSTDIR\LocalConfig"

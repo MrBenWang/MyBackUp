@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
+from re import I
 import requests
 from openpyxl import load_workbook
 from googletrans import Translator
@@ -7,7 +8,7 @@ import os
 import time
 
 source_excel = "translate_language.xlsx"
-base_path = os.path.dirname(os.path.realpath(__file__))
+base_path = os.path.dirname(__file__)
 language_code = []
 translator = Translator(service_urls=[
     'translate.google.cn'
@@ -15,7 +16,14 @@ translator = Translator(service_urls=[
 
 
 def do_translate(text_english, target_lang):
-    str_tran = translator.translate(text_english, src='en', dest=target_lang.strip()).text
+    try_count = 0
+    while(True):
+        try:
+            try_count = try_count+1
+            str_tran = translator.translate(text_english, src='en', dest=target_lang.strip()).text
+            break
+        except Exception as ex:
+            print("翻译网络问题，尝试第 %02d 次" % try_count)
     print(str_tran)
     return str_tran
 
@@ -81,7 +89,6 @@ def read_excel():
 
 
 if __name__ == "__main__":
-    # do_translate_chrome_ex("Reselect", "it")
     # do_translate_vscode("Reselect", "it")
     # print(translator.translate('Reselect', src="en", dest='it'))
     read_excel()
