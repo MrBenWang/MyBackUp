@@ -15,16 +15,17 @@ translator = Translator(service_urls=[
 ])
 
 
-def do_translate(text_english, target_lang):
-    try_count = 0
-    while(True):
+def do_translate(text_key, text_english, target_lang):
+    str_tran = ""
+    for _count in range(10):  # 循环十次，如果一直翻译不了，就手动翻译
         try:
-            try_count = try_count+1
+            _count = _count+1
             str_tran = translator.translate(text_english, src='en', dest=target_lang.strip()).text
             break
         except Exception as ex:
-            print("翻译网络问题，尝试第 %02d 次" % try_count)
-    print(str_tran)
+            print("翻译网络问题，尝试第 %02d 次，翻译 %s %s " % (_count, text_key, text_english))
+            time.sleep(1)  # 暂停一秒，可能网络原因
+    print("%s    %s" % (text_key, str_tran))
     return str_tran
 
 
@@ -72,6 +73,7 @@ def read_excel():
     _wb = load_workbook(_file_path)
     _sheet = _wb.worksheets[0]  # 第一个工作表
     text_english = ""
+    text_key = ""
     for index_r, row in enumerate(_sheet.iter_rows()):
         if index_r == 1:  # 第二行的内容为语言编码
             for cell in row:
@@ -79,12 +81,14 @@ def read_excel():
 
         if index_r > 1:  # 从第三行开始读取
             for index_c, cell in enumerate(row):
+                if index_c == 0:  # 第一列是key值
+                    text_key = cell.value
                 if index_c == 1:  # 第二列为待翻译的英文
                     text_english = cell.value
                 if index_c > 1:  # 需要翻译的对于语言
                     target_lang = language_code[index_c]
                     text_replace = text_english.replace("&#x0a;", "\n").replace("&quot;", "\"")
-                    cell.value = do_translate(text_replace, target_lang)
+                    cell.value = do_translate(text_key, text_replace, target_lang)
     _wb.save(filename=os.path.join(base_path, time.strftime("%m%d%H%M%S-", time.localtime()) + source_excel))
 
 
